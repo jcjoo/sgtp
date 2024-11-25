@@ -1,24 +1,51 @@
+package com.uni.sgtp.classes;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Projeto {
+
     private List<Tarefa> tarefas;
     private String nomeProjeto;
     private LocalDate dataFinal;
     private LocalDate dataInicial;
-    private boolean status; 
+    private Status status;
+    private int id;
 
-    public Projeto(String nomeProjeto, LocalDate dataInicial, LocalDate dataFinal) {
+    public enum Status {
+        EM_ANDAMENTO,
+        CONCLUIDO,
+    }
+
+    public Projeto(
+        int id,
+        String nomeProjeto,
+        LocalDate dataInicial,
+        LocalDate dataFinal
+    ) {
+        this.id = id;
         this.nomeProjeto = nomeProjeto;
         this.dataInicial = dataInicial;
         this.dataFinal = dataFinal;
         this.tarefas = new ArrayList<>();
-        this.status = true;
+        this.status = Status.EM_ANDAMENTO;
     }
 
     public String getNomeProjeto() {
         return nomeProjeto;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public void setNomeProjeto(String nomeProjeto) {
@@ -41,11 +68,11 @@ public class Projeto {
         this.dataInicial = dataInicial;
     }
 
-    public boolean isStatus() {
+    public Status isStatus() {
         return status;
     }
 
-    public void setStatus(boolean status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 

@@ -1,21 +1,50 @@
+package com.uni.sgtp.classes;
+
 import java.time.LocalDate;
 
 public class Tarefa {
+
     private String nome;
     private boolean concluida;
     private LocalDate prazo;
     private Prioridade prioridade;
-
+    private String descricao;
+    private int id;
 
     public enum Prioridade {
-        ALTA, MEDIA, BAIXA
+        ALTA,
+        MEDIA,
+        BAIXA,
     }
 
-    public Tarefa(String nome, boolean concluida, LocalDate prazo, Prioridade prioridade) {
+    public Tarefa(
+        int id,
+        String nome,
+        boolean concluida,
+        LocalDate prazo,
+        Prioridade prioridade
+    ) {
+        this.id = id;
         this.nome = nome;
         this.concluida = concluida;
         this.prazo = prazo;
         this.prioridade = prioridade;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getNome() {
