@@ -12,7 +12,7 @@ public class AgendaDAO {
         this.conn = conn;
     }
 
-    public void inserir(String nome, boolean concluida, LocalDate prazo, String prioridade, String descricao) {
+    public void inserir(String nome, boolean concluida, LocalDate prazo, Prioridade prioridade, String descricao) {
         
         String query = "INSERT INTO tb_tarefas (nome, concluida, prazo, prioridade, descricao) VALUES (?, ?, ?, ?, ?)";
         
