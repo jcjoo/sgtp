@@ -20,8 +20,7 @@ public class GerenciadorProjetosGUI extends JFrame {
     private JTable tabelaProjetos;
     private DefaultTableModel modeloTabela;
     private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(
-        "dd/MM/yyyy"
-    );
+            "dd/MM/yyyy");
 
     public GerenciadorProjetosGUI(Connection conn) {
         projetoService = new ProjetoService(conn);
@@ -56,11 +55,11 @@ public class GerenciadorProjetosGUI extends JFrame {
 
         // Tabela
         String[] colunas = {
-            "ID",
-            "Nome",
-            "Data Inicial",
-            "Data Final",
-            "Status",
+                "ID",
+                "Nome",
+                "Data Inicial",
+                "Data Final",
+                "Status",
         };
         modeloTabela = new DefaultTableModel(colunas, 0) {
             @Override
@@ -89,11 +88,11 @@ public class GerenciadorProjetosGUI extends JFrame {
         List<Projeto> projetos = projetoService.consultar();
         for (Projeto projeto : projetos) {
             Object[] row = {
-                projeto.getId(),
-                projeto.getNomeProjeto(),
-                projeto.getDataInicial().format(dateFormatter),
-                projeto.getDataFinal().format(dateFormatter),
-                projeto.getStatus(),
+                    projeto.getId(),
+                    projeto.getNomeProjeto(),
+                    projeto.getDataInicial().format(dateFormatter),
+                    projeto.getDataFinal().format(dateFormatter),
+                    projeto.getStatus(),
             };
             modeloTabela.addRow(row);
         }
@@ -118,25 +117,21 @@ public class GerenciadorProjetosGUI extends JFrame {
         btnSalvar.addActionListener(e -> {
             try {
                 LocalDate dataInicial = LocalDate.parse(
-                    txtDataInicial.getText(),
-                    dateFormatter
-                );
+                        txtDataInicial.getText(),
+                        dateFormatter);
                 LocalDate dataFinal = LocalDate.parse(
-                    txtDataFinal.getText(),
-                    dateFormatter
-                );
+                        txtDataFinal.getText(),
+                        dateFormatter);
                 projetoService.inserir(
-                    txtNome.getText(),
-                    dataInicial,
-                    dataFinal
-                );
+                        txtNome.getText(),
+                        dataInicial,
+                        dataFinal);
                 dialog.dispose();
                 carregarProjetos();
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(
-                    dialog,
-                    "Erro ao criar projeto: " + ex.getMessage()
-                );
+                        dialog,
+                        "Erro ao criar projeto: " + ex.getMessage());
             }
         });
 
@@ -150,9 +145,8 @@ public class GerenciadorProjetosGUI extends JFrame {
         int selectedRow = tabelaProjetos.getSelectedRow();
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(
-                this,
-                "Selecione um projeto para editar."
-            );
+                    this,
+                    "Selecione um projeto para editar.");
             return;
         }
 
@@ -160,17 +154,13 @@ public class GerenciadorProjetosGUI extends JFrame {
         dialog.setLayout(new GridLayout(6, 2));
 
         JTextField txtNome = new JTextField(
-            modeloTabela.getValueAt(selectedRow, 1).toString()
-        );
+                modeloTabela.getValueAt(selectedRow, 1).toString());
         JTextField txtDataInicial = new JTextField(
-            modeloTabela.getValueAt(selectedRow, 2).toString()
-        );
+                modeloTabela.getValueAt(selectedRow, 2).toString());
         JTextField txtDataFinal = new JTextField(
-            modeloTabela.getValueAt(selectedRow, 3).toString()
-        );
+                modeloTabela.getValueAt(selectedRow, 3).toString());
         JComboBox<Projeto.Status> cbStatus = new JComboBox<>(
-            Projeto.Status.values()
-        );
+                Projeto.Status.values());
 
         dialog.add(new JLabel("Nome:"));
         dialog.add(txtNome);
@@ -186,27 +176,23 @@ public class GerenciadorProjetosGUI extends JFrame {
             try {
                 int id = (int) modeloTabela.getValueAt(selectedRow, 0);
                 LocalDate dataInicial = LocalDate.parse(
-                    txtDataInicial.getText(),
-                    dateFormatter
-                );
+                        txtDataInicial.getText(),
+                        dateFormatter);
                 LocalDate dataFinal = LocalDate.parse(
-                    txtDataFinal.getText(),
-                    dateFormatter
-                );
+                        txtDataFinal.getText(),
+                        dateFormatter);
                 projetoService.alterar(
-                    id,
-                    txtNome.getText(),
-                    dataInicial,
-                    dataFinal,
-                    (Projeto.Status) cbStatus.getSelectedItem()
-                );
+                        id,
+                        txtNome.getText(),
+                        dataInicial,
+                        dataFinal,
+                        (Projeto.Status) cbStatus.getSelectedItem());
                 dialog.dispose();
                 carregarProjetos();
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(
-                    dialog,
-                    "Erro ao editar projeto: " + ex.getMessage()
-                );
+                        dialog,
+                        "Erro ao editar projeto: " + ex.getMessage());
             }
         });
 
@@ -220,18 +206,16 @@ public class GerenciadorProjetosGUI extends JFrame {
         int selectedRow = tabelaProjetos.getSelectedRow();
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(
-                this,
-                "Selecione um projeto para deletar."
-            );
+                    this,
+                    "Selecione um projeto para deletar.");
             return;
         }
 
         int confirm = JOptionPane.showConfirmDialog(
-            this,
-            "Tem certeza que deseja deletar este projeto?",
-            "Confirmar Deleção",
-            JOptionPane.YES_NO_OPTION
-        );
+                this,
+                "Tem certeza que deseja deletar este projeto?",
+                "Confirmar Deleção",
+                JOptionPane.YES_NO_OPTION);
 
         if (confirm == JOptionPane.YES_OPTION) {
             int id = (int) modeloTabela.getValueAt(selectedRow, 0);
@@ -244,9 +228,8 @@ public class GerenciadorProjetosGUI extends JFrame {
         int selectedRow = tabelaProjetos.getSelectedRow();
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(
-                this,
-                "Selecione um projeto para ver as tarefas."
-            );
+                    this,
+                    "Selecione um projeto para ver as tarefas.");
             return;
         }
 
@@ -254,26 +237,24 @@ public class GerenciadorProjetosGUI extends JFrame {
         String nomeProjeto = (String) modeloTabela.getValueAt(selectedRow, 1);
 
         JDialog dialogTarefas = new JDialog(
-            this,
-            "Tarefas do Projeto: " + nomeProjeto,
-            true
-        );
+                this,
+                "Tarefas do Projeto: " + nomeProjeto,
+                true);
         dialogTarefas.setSize(800, 500);
         dialogTarefas.setLayout(new BorderLayout());
 
         // Criar tabela de tarefas
         String[] colunasTarefas = {
-            "ID",
-            "Nome",
-            "Descrição",
-            "Prazo",
-            "Prioridade",
-            "Concluída",
+                "ID",
+                "Nome",
+                "Descrição",
+                "Prazo",
+                "Prioridade",
+                "Concluída",
         };
         DefaultTableModel modeloTarefas = new DefaultTableModel(
-            colunasTarefas,
-            0
-        ) {
+                colunasTarefas,
+                0) {
             @Override
             public Class<?> getColumnClass(int columnIndex) {
                 return columnIndex == 5 ? Boolean.class : Object.class;
@@ -302,15 +283,9 @@ public class GerenciadorProjetosGUI extends JFrame {
         carregarTarefas(projetoId, modeloTarefas);
 
         // Ações dos botões
-        btnNovaTarefa.addActionListener(e ->
-            mostrarDialogNovaTarefa(projetoId, modeloTarefas)
-        );
-        btnEditarTarefa.addActionListener(e ->
-            editarTarefaSelecionada(tabelaTarefas, modeloTarefas, projetoId)
-        );
-        btnDeletarTarefa.addActionListener(e ->
-            deletarTarefaSelecionada(tabelaTarefas, modeloTarefas, projetoId)
-        );
+        btnNovaTarefa.addActionListener(e -> mostrarDialogNovaTarefa(projetoId, modeloTarefas));
+        btnEditarTarefa.addActionListener(e -> editarTarefaSelecionada(tabelaTarefas, modeloTarefas, projetoId));
+        btnDeletarTarefa.addActionListener(e -> deletarTarefaSelecionada(tabelaTarefas, modeloTarefas, projetoId));
 
         // Adicionar listener para mudanças na coluna "Concluída"
         modeloTarefas.addTableModelListener(e -> {
@@ -319,11 +294,10 @@ public class GerenciadorProjetosGUI extends JFrame {
                 boolean concluida = (boolean) modeloTarefas.getValueAt(row, 5);
                 int tarefaId = (int) modeloTarefas.getValueAt(row, 0);
                 alterarStatusTarefa(
-                    tarefaId,
-                    concluida,
-                    projetoId,
-                    modeloTarefas
-                );
+                        tarefaId,
+                        concluida,
+                        projetoId,
+                        modeloTarefas);
             }
         });
 
@@ -334,32 +308,29 @@ public class GerenciadorProjetosGUI extends JFrame {
     }
 
     private void carregarTarefas(
-        int projetoId,
-        DefaultTableModel modeloTarefas
-    ) {
+            int projetoId,
+            DefaultTableModel modeloTarefas) {
         modeloTarefas.setRowCount(0);
         List<Tarefa> tarefas = projetoService.consultarTarefasDoProjeto(
-            projetoId
-        );
+                projetoId);
         for (Tarefa tarefa : tarefas) {
             Object[] row = {
-                tarefa.getId(),
-                tarefa.getNome(),
-                tarefa.getDescricao(),
-                tarefa.getPrazo() != null
-                    ? tarefa.getPrazo().format(dateFormatter)
-                    : "",
-                tarefa.getPrioridade(),
-                tarefa.isConcluida(),
+                    tarefa.getId(),
+                    tarefa.getNome(),
+                    tarefa.getDescricao(),
+                    tarefa.getPrazo() != null
+                            ? tarefa.getPrazo().format(dateFormatter)
+                            : "",
+                    tarefa.getPrioridade(),
+                    tarefa.isConcluida(),
             };
             modeloTarefas.addRow(row);
         }
     }
 
     private void mostrarDialogNovaTarefa(
-        int projetoId,
-        DefaultTableModel modeloTarefas
-    ) {
+            int projetoId,
+            DefaultTableModel modeloTarefas) {
         JDialog dialog = new JDialog(this, "Nova Tarefa", true);
         dialog.setLayout(new GridLayout(6, 2));
 
@@ -367,8 +338,7 @@ public class GerenciadorProjetosGUI extends JFrame {
         JTextField txtDescricao = new JTextField();
         JTextField txtPrazo = new JTextField();
         JComboBox<Tarefa.Prioridade> cbPrioridade = new JComboBox<>(
-            Tarefa.Prioridade.values()
-        );
+                Tarefa.Prioridade.values());
 
         dialog.add(new JLabel("Nome:"));
         dialog.add(txtNome);
@@ -383,25 +353,23 @@ public class GerenciadorProjetosGUI extends JFrame {
         btnSalvar.addActionListener(e -> {
             try {
                 LocalDate prazo = txtPrazo.getText().isEmpty()
-                    ? null
-                    : LocalDate.parse(txtPrazo.getText(), dateFormatter);
+                        ? null
+                        : LocalDate.parse(txtPrazo.getText(), dateFormatter);
 
                 tarefaService.inserir(
-                    txtNome.getText(),
-                    false,
-                    prazo,
-                    (Tarefa.Prioridade) cbPrioridade.getSelectedItem(),
-                    txtDescricao.getText(),
-                    projetoId
-                );
+                        txtNome.getText(),
+                        false,
+                        prazo,
+                        (Tarefa.Prioridade) cbPrioridade.getSelectedItem(),
+                        txtDescricao.getText(),
+                        projetoId);
 
                 dialog.dispose();
                 carregarTarefas(projetoId, modeloTarefas);
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(
-                    dialog,
-                    "Erro ao criar tarefa: " + ex.getMessage()
-                );
+                        dialog,
+                        "Erro ao criar tarefa: " + ex.getMessage());
             }
         });
 
@@ -412,16 +380,14 @@ public class GerenciadorProjetosGUI extends JFrame {
     }
 
     private void editarTarefaSelecionada(
-        JTable tabelaTarefas,
-        DefaultTableModel modeloTarefas,
-        int projetoId
-    ) {
+            JTable tabelaTarefas,
+            DefaultTableModel modeloTarefas,
+            int projetoId) {
         int selectedRow = tabelaTarefas.getSelectedRow();
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(
-                this,
-                "Selecione uma tarefa para editar."
-            );
+                    this,
+                    "Selecione uma tarefa para editar.");
             return;
         }
 
@@ -429,21 +395,16 @@ public class GerenciadorProjetosGUI extends JFrame {
         dialog.setLayout(new GridLayout(6, 2));
 
         JTextField txtNome = new JTextField(
-            modeloTarefas.getValueAt(selectedRow, 1).toString()
-        );
+                modeloTarefas.getValueAt(selectedRow, 1).toString());
         JTextField txtDescricao = new JTextField(
-            modeloTarefas.getValueAt(selectedRow, 2).toString()
-        );
+                modeloTarefas.getValueAt(selectedRow, 2).toString());
         JTextField txtPrazo = new JTextField(
-            modeloTarefas.getValueAt(selectedRow, 3).toString()
-        );
+                modeloTarefas.getValueAt(selectedRow, 3).toString());
         JComboBox<Tarefa.Prioridade> cbPrioridade = new JComboBox<>(
-            Tarefa.Prioridade.values()
-        );
+                Tarefa.Prioridade.values());
         JCheckBox chkConcluida = new JCheckBox(
-            "Concluída",
-            (Boolean) modeloTarefas.getValueAt(selectedRow, 5)
-        );
+                "Concluída",
+                (Boolean) modeloTarefas.getValueAt(selectedRow, 5));
 
         dialog.add(new JLabel("Nome:"));
         dialog.add(txtNome);
@@ -461,25 +422,23 @@ public class GerenciadorProjetosGUI extends JFrame {
             try {
                 int tarefaId = (int) modeloTarefas.getValueAt(selectedRow, 0);
                 LocalDate prazo = txtPrazo.getText().isEmpty()
-                    ? null
-                    : LocalDate.parse(txtPrazo.getText(), dateFormatter);
+                        ? null
+                        : LocalDate.parse(txtPrazo.getText(), dateFormatter);
 
                 tarefaService.alterar(
-                    tarefaId,
-                    txtNome.getText(),
-                    chkConcluida.isSelected(),
-                    prazo,
-                    cbPrioridade.getSelectedItem().toString(),
-                    txtDescricao.getText()
-                );
+                        tarefaId,
+                        txtNome.getText(),
+                        chkConcluida.isSelected(),
+                        prazo,
+                        cbPrioridade.getSelectedItem().toString(),
+                        txtDescricao.getText());
 
                 dialog.dispose();
                 carregarTarefas(projetoId, modeloTarefas);
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(
-                    dialog,
-                    "Erro ao editar tarefa: " + ex.getMessage()
-                );
+                        dialog,
+                        "Erro ao editar tarefa: " + ex.getMessage());
             }
         });
 
@@ -490,25 +449,22 @@ public class GerenciadorProjetosGUI extends JFrame {
     }
 
     private void deletarTarefaSelecionada(
-        JTable tabelaTarefas,
-        DefaultTableModel modeloTarefas,
-        int projetoId
-    ) {
+            JTable tabelaTarefas,
+            DefaultTableModel modeloTarefas,
+            int projetoId) {
         int selectedRow = tabelaTarefas.getSelectedRow();
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(
-                this,
-                "Selecione uma tarefa para deletar."
-            );
+                    this,
+                    "Selecione uma tarefa para deletar.");
             return;
         }
 
         int confirm = JOptionPane.showConfirmDialog(
-            this,
-            "Tem certeza que deseja deletar esta tarefa?",
-            "Confirmar Deleção",
-            JOptionPane.YES_NO_OPTION
-        );
+                this,
+                "Tem certeza que deseja deletar esta tarefa?",
+                "Confirmar Deleção",
+                JOptionPane.YES_NO_OPTION);
 
         if (confirm == JOptionPane.YES_OPTION) {
             int tarefaId = (int) modeloTarefas.getValueAt(selectedRow, 0);
@@ -518,40 +474,30 @@ public class GerenciadorProjetosGUI extends JFrame {
     }
 
     private void alterarStatusTarefa(
-        int tarefaId,
-        boolean concluida,
-        int projetoId,
-        DefaultTableModel modeloTarefas
-    ) {
+            int tarefaId,
+            boolean concluida,
+            int projetoId,
+            DefaultTableModel modeloTarefas) {
         try {
-            tarefaService.alterar(
-                tarefaId,
-                "", // nome atual
-                concluida,
-                null, // prazo atual
-                "", // prioridade atual
-                "" // descrição atual
-            );
+            tarefaService.alterarStatus(
+                    tarefaId,
+                    concluida);
             carregarTarefas(projetoId, modeloTarefas);
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(
-                this,
-                "Erro ao atualizar status da tarefa: " + ex.getMessage()
-            );
+                    this,
+                    "Erro ao atualizar status da tarefa: " + ex.getMessage());
         }
     }
 
     public static void main(String[] args) {
-        // Exemplo de uso
-
         SwingUtilities.invokeLater(() -> {
-            Connection conn = null; // Inicialize sua conexão aqui
+            Connection conn = null;
             ConectaBanco cb = new ConectaBanco(
-                "jdbc:mysql://localhost:3306/bd_projeto",
-                "root",
-                "root",
-                "com.mysql.cj.jdbc.Driver"
-            );
+                    "jdbc:mysql://localhost:3306/bd_projeto",
+                    "root",
+                    "root",
+                    "com.mysql.cj.jdbc.Driver");
             conn = cb.getConnection();
 
             new GerenciadorProjetosGUI(conn).setVisible(true);

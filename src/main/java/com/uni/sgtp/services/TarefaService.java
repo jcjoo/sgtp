@@ -21,16 +21,14 @@ public class TarefaService {
     }
 
     public void inserir(
-        String nome,
-        boolean concluida,
-        LocalDate prazo,
-        Prioridade prioridade,
-        String descricao,
-        Integer projetoId
-    ) {
-        String query =
-            "INSERT INTO tb_tarefas (nome, concluida, prazo, prioridade, descricao, projeto_id) " +
-            "VALUES (?, ?, ?, ?, ?, ?)";
+            String nome,
+            boolean concluida,
+            LocalDate prazo,
+            Prioridade prioridade,
+            String descricao,
+            Integer projetoId) {
+        String query = "INSERT INTO tb_tarefas (nome, concluida, prazo, prioridade, descricao, projeto_id) " +
+                "VALUES (?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, nome);
@@ -48,61 +46,54 @@ public class TarefaService {
             JOptionPane.showMessageDialog(null, "Tarefa inserida com sucesso!");
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(
-                null,
-                "Erro ao inserir: " + e.getMessage()
-            );
+                    null,
+                    "Erro ao inserir: " + e.getMessage());
         }
     }
 
     public List<Tarefa> consultar() {
-        String query =
-            "SELECT nome, concluida, prazo, prioridade, descricao FROM tb_tarefas";
+        String query = "SELECT nome, concluida, prazo, prioridade, descricao FROM tb_tarefas";
         List<Tarefa> tarefas = new ArrayList<>();
 
         try (
-            PreparedStatement stmt = conn.prepareStatement(query);
-            ResultSet rs = stmt.executeQuery()
-        ) {
+                PreparedStatement stmt = conn.prepareStatement(query);
+                ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
                 int id = rs.getInt("id");
                 String nome = rs.getString("nome");
                 boolean concluida = rs.getBoolean("concluida");
                 LocalDate prazo = rs.getDate("prazo") != null
-                    ? rs.getDate("prazo").toLocalDate()
-                    : null;
+                        ? rs.getDate("prazo").toLocalDate()
+                        : null;
                 String prioridade = rs.getString("prioridade");
                 String descricao = rs.getString("descricao");
 
                 Tarefa tarefa = new Tarefa(
-                    id,
-                    nome,
-                    concluida,
-                    prazo,
-                    Tarefa.Prioridade.valueOf(prioridade)
-                );
+                        id,
+                        nome,
+                        concluida,
+                        prazo,
+                        Tarefa.Prioridade.valueOf(prioridade));
                 tarefa.setDescricao(descricao);
 
                 tarefas.add(tarefa);
             }
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(
-                null,
-                "Erro ao consultar: " + e.getMessage()
-            );
+                    null,
+                    "Erro ao consultar: " + e.getMessage());
         }
         return tarefas;
     }
 
     public void alterar(
-        int id,
-        String nome,
-        boolean concluida,
-        LocalDate prazo,
-        String prioridade,
-        String descricao
-    ) {
-        String query =
-            "UPDATE tb_tarefas SET nome = ?, concluida = ?, prazo = ?, prioridade = ?, descricao = ? WHERE id = ?";
+            int id,
+            String nome,
+            boolean concluida,
+            LocalDate prazo,
+            String prioridade,
+            String descricao) {
+        String query = "UPDATE tb_tarefas SET nome = ?, concluida = ?, prazo = ?, prioridade = ?, descricao = ? WHERE id = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, nome);
@@ -115,20 +106,43 @@ public class TarefaService {
             int rowsAffected = stmt.executeUpdate();
             if (rowsAffected > 0) {
                 JOptionPane.showMessageDialog(
-                    null,
-                    "Tarefa alterada com sucesso!"
-                );
+                        null,
+                        "Tarefa alterada com sucesso!");
             } else {
                 JOptionPane.showMessageDialog(
-                    null,
-                    "Nenhuma tarefa encontrada com o ID fornecido."
-                );
+                        null,
+                        "Nenhuma tarefa encontrada com o ID fornecido.");
             }
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(
-                null,
-                "Erro ao alterar: " + e.getMessage()
-            );
+                    null,
+                    "Erro ao alterar: " + e.getMessage());
+        }
+    }
+
+    public void alterarStatus(
+            int id,
+            boolean concluida) {
+        String query = "UPDATE tb_tarefas SET concluida = ? WHERE id = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setBoolean(1, concluida);
+            stmt.setInt(2, id);
+
+            int rowsAffected = stmt.executeUpdate();
+            if (rowsAffected > 0) {
+                JOptionPane.showMessageDialog(
+                        null,
+                        "Tarefa alterada com sucesso!");
+            } else {
+                JOptionPane.showMessageDialog(
+                        null,
+                        "Nenhuma tarefa encontrada com o ID fornecido.");
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(
+                    null,
+                    "Erro ao alterar: " + e.getMessage());
         }
     }
 
@@ -141,20 +155,17 @@ public class TarefaService {
             int rowsAffected = stmt.executeUpdate();
             if (rowsAffected > 0) {
                 JOptionPane.showMessageDialog(
-                    null,
-                    "Tarefa deletada com sucesso!"
-                );
+                        null,
+                        "Tarefa deletada com sucesso!");
             } else {
                 JOptionPane.showMessageDialog(
-                    null,
-                    "Nenhuma tarefa encontrada com o ID fornecido."
-                );
+                        null,
+                        "Nenhuma tarefa encontrada com o ID fornecido.");
             }
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(
-                null,
-                "Erro ao deletar: " + e.getMessage()
-            );
+                    null,
+                    "Erro ao deletar: " + e.getMessage());
         }
     }
 }
