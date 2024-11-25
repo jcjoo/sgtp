@@ -85,7 +85,6 @@ public class ProjetoService {
                     Projeto.Status.valueOf(rs.getString("status"))
                 );
 
-                // Consulta as tarefas do projeto
                 List<Tarefa> tarefas = consultarTarefasDoProjeto(projetoId);
                 for (Tarefa tarefa : tarefas) {
                     projeto.adicionarTarefa(tarefa);
@@ -178,7 +177,7 @@ public class ProjetoService {
     }
 
     public void deletar(int id) {
-        // Primeiro, atualiza as tarefas para remover a referência ao projeto
+
         String updateTarefasQuery =
             "UPDATE tb_tarefas SET projeto_id = NULL WHERE projeto_id = ?";
 
@@ -195,7 +194,6 @@ public class ProjetoService {
             return;
         }
 
-        // Depois, remove o projeto
         String deleteProjectQuery = "DELETE FROM tb_projetos WHERE id = ?";
 
         try (
@@ -225,7 +223,6 @@ public class ProjetoService {
 
     public void adicionarTarefaAoProjeto(int projetoId, Tarefa tarefa) {
         TarefaService tarefaService = new TarefaService(conn);
-        // Assume que o TarefaService foi modificado para aceitar projeto_id na inserção
         tarefaService.inserir(
             tarefa.getNome(),
             false,
